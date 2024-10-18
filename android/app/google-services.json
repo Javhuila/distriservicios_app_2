@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "92755572585",
+    "project_id": "distriserviciosapp2-f3969",
+    "storage_bucket": "distriserviciosapp2-f3969.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92755572585:android:cd32775602e467706b2ff8",
+        "android_client_info": {
+          "package_name": "com.example.distriservicios_app_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2qdmUQUkEMspmcwNAfNpBCAMmZv6HfMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
