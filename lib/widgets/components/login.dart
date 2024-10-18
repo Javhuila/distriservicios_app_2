@@ -4,6 +4,7 @@ import 'package:distriservicios_app_2/widgets/components/home.dart';
 import 'package:distriservicios_app_2/widgets/components/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -24,6 +25,13 @@ class _LogInState extends State<LogIn> {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userCorreo', email);
+      print('Estado de inicio de sesión guardado: true');
+      print('Usuario ha iniciado sesión: $email');
+
       if (!mounted) return;
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Home()));
@@ -124,8 +132,8 @@ class _LogInState extends State<LogIn> {
                             email = mailcontroller.text;
                             password = passwordcontroller.text;
                           });
+                          userLogin();
                         }
-                        userLogin();
                       },
                       child: Container(
                           width: MediaQuery.of(context).size.width,

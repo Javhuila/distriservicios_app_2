@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:distriservicios_app_2/service/model/materiales.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../service/google/google_drive_service.dart';
+
 class ReciboObraMaterial extends StatefulWidget {
   const ReciboObraMaterial({super.key});
 
@@ -40,10 +42,10 @@ class _ReciboObraMaterialState extends State<ReciboObraMaterial> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
-        print('Imagen seleccionada: ${_image!.path}'); // Debugging
+        // print('Imagen seleccionada: ${_image!.path}');
       });
     } else {
-      print('No se seleccionó ninguna imagen'); // Debugging
+      // print('No se seleccionó ninguna imagen');
     }
   }
 
@@ -71,7 +73,6 @@ class _ReciboObraMaterialState extends State<ReciboObraMaterial> {
           });
         });
       } else {
-        // Aquí puedes mostrar un mensaje indicando que el material ya fue agregado
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Este material ya ha sido agregado.')),
         );
@@ -200,12 +201,11 @@ class _ReciboObraMaterialState extends State<ReciboObraMaterial> {
                                 String formattedDate =
                                     "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
                                 _fechaConstruccionController.text =
-                                    formattedDate; // Actualiza el campo de texto
+                                    formattedDate;
                               }
                             },
                             onSaved: (value) {
-                              _fechaConstruccion =
-                                  value; // Guardar fecha de servicio
+                              _fechaConstruccion = value;
                             },
                           ),
                           const SizedBox(
@@ -355,37 +355,24 @@ class _ReciboObraMaterialState extends State<ReciboObraMaterial> {
                             child: SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
 
-                                      print('Nombre Técnico: $_nombreTecnico');
-                                      print('Usuario: $_nombreUsuario');
-                                      print('Código Usuario: $_codigoUsuario');
-                                      print('Cédula: $_cedula');
-                                      print(
-                                          'Fecha Construcción: $_fechaConstruccion');
-                                      print('Fecha Servicio: $_fechaServicio');
-
-                                      if (_textFirma != null &&
-                                          _textFirma!.isNotEmpty) {
-                                        print('Texto: $_textFirma');
-                                      } else if (_image != null) {
-                                        print('Imagen: ${_image!.path}');
-                                      } else {
-                                        print(
-                                            'No se ingresó texto ni se seleccionó imagen.');
-                                      }
-
-                                      if (addedMaterials.isNotEmpty) {
-                                        print('Materiales agregados:');
-                                        for (var material in addedMaterials) {
-                                          print(
-                                              'Código: ${material['codigo']}, Nombre: ${material['nombre']}, Cantidad: ${material['cantidad']}');
-                                        }
-                                      } else {
-                                        print('No se han agregado materiales.');
-                                      }
+                                      await uploadFileToDrive(
+                                          'form_data.pdf',
+                                          {
+                                            'nombreTecnico': _nombreTecnico,
+                                            'nombreUsuario': _nombreUsuario,
+                                            'codigoUsuario': _codigoUsuario,
+                                            'cedula': _cedula,
+                                            'fechaConstruccion':
+                                                _fechaConstruccion,
+                                            'fechaServicio': _fechaServicio,
+                                            'materiales': addedMaterials,
+                                            'firma': _textFirma ?? '',
+                                          },
+                                          _image);
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
