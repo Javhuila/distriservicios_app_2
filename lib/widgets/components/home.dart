@@ -19,7 +19,7 @@ class Home extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.purple,
+        backgroundColor: const Color.fromARGB(255, 71, 39, 176),
         actions: [
           IconButton(
             onPressed: () {
@@ -36,14 +36,16 @@ class Home extends StatelessWidget {
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 50),
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.end,
                 // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const SizedBox(height: 50),
-                  SizedBox(
-                      width: double.infinity,
+                  CircleAvatar(
+                      // width: double.infinity,
+                      // height: 70,
+                      radius: 80,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -53,11 +55,28 @@ class Home extends StatelessWidget {
                                     const ReciboObraMaterial()),
                           );
                         },
-                        child: const Text("Recibo de obra y de Material"),
+                        child: Container(
+                          width: 90,
+                          height: 150,
+                          child: Center(
+                            child: const Text(
+                              "Recibo de obra y de Material",
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.clip,
+                              maxLines: 5,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
                       )),
                   const SizedBox(height: 50),
-                  SizedBox(
+                  Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white54, width: 2.0),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                       width: double.infinity,
+                      height: 70,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -67,12 +86,16 @@ class Home extends StatelessWidget {
                                     const ReciboObraSoldador()),
                           );
                         },
-                        child:
-                            const Text("Recibo de Obra de soldador por Tubos"),
+                        child: const Text(
+                          "Recibo de Obra de soldador por Tubos",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20),
+                        ),
                       )),
                   const SizedBox(height: 50),
                   SizedBox(
                       width: double.infinity,
+                      height: 70,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -82,11 +105,15 @@ class Home extends StatelessWidget {
                                     const InformeDiarioObra()),
                           );
                         },
-                        child: const Text("Informe diario de Obra"),
+                        child: const Text(
+                          "Informe diario de Obra",
+                          style: TextStyle(fontSize: 20),
+                        ),
                       )),
                   const SizedBox(height: 50),
                   SizedBox(
                       width: double.infinity,
+                      height: 70,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -96,11 +123,15 @@ class Home extends StatelessWidget {
                                     const ReporteDiarioPersonal()),
                           );
                         },
-                        child: const Text("Reporte diario del Personal"),
+                        child: const Text(
+                          "Reporte diario del Personal",
+                          style: TextStyle(fontSize: 20),
+                        ),
                       )),
                   const SizedBox(height: 50),
                   SizedBox(
                       width: double.infinity,
+                      height: 70,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -109,7 +140,10 @@ class Home extends StatelessWidget {
                                 builder: (context) => const OrdenServicio()),
                           );
                         },
-                        child: const Text("Orden de Servicio"),
+                        child: const Text(
+                          "Orden de Servicio",
+                          style: TextStyle(fontSize: 20),
+                        ),
                       )),
                 ],
               )),

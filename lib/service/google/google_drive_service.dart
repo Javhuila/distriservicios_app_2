@@ -53,7 +53,9 @@ Future<void> uploadFileToDrive(
               ],
             ),
             pw.SizedBox(height: 20),
-            pw.Text('Firma del Usuario: ${data['firma'] ?? ''}'),
+            pw.Text('Firma del Usuario: ${data['firmaUsuario'] ?? ''}'),
+            pw.Text('Firma del Instalador: ${data['firmaInstalador'] ?? ''}'),
+            pw.Text('Firma del Superior: ${data['firmaSuperior'] ?? ''}'),
           ],
         );
       },
