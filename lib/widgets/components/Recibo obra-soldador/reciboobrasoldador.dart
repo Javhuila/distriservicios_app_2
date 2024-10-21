@@ -21,6 +21,8 @@ class _ReciboObraSoldadorState extends State<ReciboObraSoldador> {
   List<Tuberias> tuberiasss = [];
   Tuberias? seleccionarTuberias;
   int cantidadTuberias = 1;
+  double? coorLatitud;
+  double? coorLongitud;
   List<Map<String, dynamic>> addedTuberias = [];
 
   final TextEditingController _fechaSoldadorTuberiaController =
@@ -66,6 +68,8 @@ class _ReciboObraSoldadorState extends State<ReciboObraSoldador> {
             'codigo': seleccionarTuberias!.codigo,
             'nombre': seleccionarTuberias!.nombre,
             'cantidad': cantidadTuberias,
+            'latitud': coorLatitud,
+            'longitud': coorLongitud,
           });
         });
       } else {
@@ -232,61 +236,102 @@ class _ReciboObraSoldadorState extends State<ReciboObraSoldador> {
                       const SizedBox(
                         height: 20,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              onChanged: (value) {
+                                coorLatitud = double.tryParse(value);
+                              },
+                              decoration:
+                                  const InputDecoration(labelText: 'Latitud'),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TextField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              onChanged: (value) {
+                                coorLongitud = double.tryParse(value);
+                              },
+                              decoration:
+                                  const InputDecoration(labelText: 'Longitud'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                           onPressed: agregarTuberias,
                           child: const Text("Agregar")),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
-                          child: DataTable(
-                            columnSpacing: 20,
-                            dataRowMinHeight: 50,
-                            dataRowMaxHeight: 110,
-                            border: TableBorder.all(),
-                            columns: const [
-                              DataColumn(
-                                label:
-                                    SizedBox(width: 50, child: Text('Codigo')),
-                              ),
-                              DataColumn(label: Text('Nombre')),
-                              DataColumn(label: Text('Cantidad')),
-                              DataColumn(label: Text('Eliminar')),
-                            ],
-                            rows: addedTuberias.map((medicioness) {
-                              int index = addedTuberias.indexOf(medicioness);
-                              return DataRow(cells: [
-                                DataCell(Text(medicioness['codigo'])),
-                                DataCell(Text(
-                                  medicioness['nombre'],
-                                )),
-                                DataCell(Center(
-                                  child: Text(
-                                    medicioness['cantidad'].toString(),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(fontSize: 25),
-                                  ),
-                                )),
-                                DataCell(
-                                  SizedBox(
-                                    width: 50,
-                                    child: IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () => eliminarTuberias(index),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              columnSpacing: 20,
+                              dataRowMinHeight: 50,
+                              dataRowMaxHeight: 110,
+                              border: TableBorder.all(),
+                              columns: const [
+                                DataColumn(
+                                  label: SizedBox(
+                                      width: 50, child: Text('Codigo')),
+                                ),
+                                DataColumn(label: Text('Nombre')),
+                                DataColumn(label: Text('Cantidad')),
+                                DataColumn(label: Text('Latitud')),
+                                DataColumn(label: Text('Longitud')),
+                                DataColumn(label: Text('Eliminar')),
+                              ],
+                              rows: addedTuberias.map((medicioness) {
+                                int index = addedTuberias.indexOf(medicioness);
+                                return DataRow(cells: [
+                                  DataCell(Text(medicioness['codigo'])),
+                                  DataCell(Text(
+                                    medicioness['nombre'],
+                                  )),
+                                  DataCell(Center(
+                                    child: Text(
+                                      medicioness['cantidad'].toString(),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 25),
+                                    ),
+                                  )),
+                                  DataCell(
+                                      Text(medicioness['latitud'].toString())),
+                                  DataCell(
+                                      Text(medicioness['longitud'].toString())),
+                                  DataCell(
+                                    SizedBox(
+                                      width: 50,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () =>
+                                            eliminarTuberias(index),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ]);
-                            }).toList(),
+                                ]);
+                              }).toList(),
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text("Aqui van las coordenadas"),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      // const Text("Aqui van las coordenadas"),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
                       const Divider(),
                       const SizedBox(
                         height: 20,
