@@ -285,7 +285,10 @@ class _ReciboObraSoldadorState extends State<ReciboObraSoldador> {
                                   label: SizedBox(
                                       width: 50, child: Text('Codigo')),
                                 ),
-                                DataColumn(label: Text('Nombre')),
+                                DataColumn(
+                                  label: SizedBox(
+                                      width: 50, child: Text('Nombre')),
+                                ),
                                 DataColumn(label: Text('Cantidad')),
                                 DataColumn(label: Text('Latitud')),
                                 DataColumn(label: Text('Longitud')),
@@ -297,6 +300,8 @@ class _ReciboObraSoldadorState extends State<ReciboObraSoldador> {
                                   DataCell(Text(medicioness['codigo'])),
                                   DataCell(Text(
                                     medicioness['nombre'],
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
                                   )),
                                   DataCell(Center(
                                     child: Text(

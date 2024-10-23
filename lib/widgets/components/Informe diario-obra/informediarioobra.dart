@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class InformeDiarioObra extends StatefulWidget {
   const InformeDiarioObra({super.key});
@@ -11,91 +14,146 @@ class _InformeDiarioObraState extends State<InformeDiarioObra> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _fechadiarioController = TextEditingController();
+  final TextEditingController _tramoController = TextEditingController();
+  final TextEditingController _acometidaController = TextEditingController();
+  final TextEditingController _cintaController = TextEditingController();
+  final TextEditingController _cantidadTendidoController =
+      TextEditingController();
+  final TextEditingController _equipoController = TextEditingController();
+  final TextEditingController _propietarioController = TextEditingController();
+  final TextEditingController _rocaController = TextEditingController();
+  final TextEditingController _observacionController = TextEditingController();
+  final TextEditingController _tiempoUsoController = TextEditingController();
+  final TextEditingController _combustibleController = TextEditingController();
+  final TextEditingController _estadoController = TextEditingController();
+  final TextEditingController _cambioAceiteController = TextEditingController();
 
-  // Controladores para los campos de cada tabla
-  final TextEditingController _campo1Tabla1Controller = TextEditingController();
-  final TextEditingController _campo2Tabla1Controller = TextEditingController();
-  final TextEditingController _campo3Tabla1Controller = TextEditingController();
-  final TextEditingController _campo4Tabla1Controller = TextEditingController();
-  final TextEditingController _campo5Tabla1Controller = TextEditingController();
-  final TextEditingController _campo6Tabla1Controller = TextEditingController();
-  final TextEditingController _campo7Tabla1Controller = TextEditingController();
-  final TextEditingController _campo8Tabla1Controller = TextEditingController();
-  final TextEditingController _campo9Tabla1Controller = TextEditingController();
+  String? selectedMedida;
+  String? selectedMedidaTwo;
+  String? selectedMedidaThree;
+  String? selectedMedidaFour;
+  String? selectedMedidaOption;
+  String? selectedMedidaOptionTwo;
+  String? selectedMedidaOptionThree;
+  int? cantidadMedida;
 
-  // Repite esto para la Tabla 2
-  final TextEditingController _campo1Tabla2Controller = TextEditingController();
-  final TextEditingController _campo2Tabla2Controller = TextEditingController();
-  final TextEditingController _campo3Tabla2Controller = TextEditingController();
-  final TextEditingController _campo4Tabla2Controller = TextEditingController();
-  final TextEditingController _campo5Tabla2Controller = TextEditingController();
-  final TextEditingController _campo6Tabla2Controller = TextEditingController();
+  List<String> medidaPulgada = [
+    '1/2"',
+    '3/4"',
+    '1"',
+    '2"',
+  ];
 
-  // Listas para guardar los datos
-  final List<Map<String, String>> _datosTabla1 = [];
-  final List<Map<String, String>> _datosTabla2 = [];
+  List<String> medidaextraPulgada = [
+    '1/2"',
+    '3/4"',
+    '1"',
+  ];
 
-  void _guardarDatos(int tablaIndex) {
-    if (_formKey.currentState!.validate()) {
-      Map<String, String> datosGuardados = {};
+  List<String> mediaPulgada = [
+    'A',
+    'RD',
+  ];
 
-      if (tablaIndex == 1) {
-        datosGuardados = {
-          'Campo 1': _campo1Tabla1Controller.text,
-          'Campo 2': _campo2Tabla1Controller.text,
-          'Campo 3': _campo3Tabla1Controller.text,
-          'Campo 4': _campo4Tabla1Controller.text,
-          'Campo 5': _campo5Tabla1Controller.text,
-          'Campo 6': _campo6Tabla1Controller.text,
-          'Campo 7': _campo7Tabla1Controller.text,
-          'Campo 8': _campo8Tabla1Controller.text,
-          'Campo 9': _campo9Tabla1Controller.text,
-        };
-        _datosTabla1.add(datosGuardados);
-        // Limpiar los campos de Tabla 1
-        _campo1Tabla1Controller.clear();
-        _campo2Tabla1Controller.clear();
-        _campo3Tabla1Controller.clear();
-        _campo4Tabla1Controller.clear();
-        _campo5Tabla1Controller.clear();
-        _campo6Tabla1Controller.clear();
-        _campo7Tabla1Controller.clear();
-        _campo8Tabla1Controller.clear();
-        _campo9Tabla1Controller.clear();
-      } else if (tablaIndex == 2) {
-        datosGuardados = {
-          'Campo 1': _campo1Tabla2Controller.text,
-          'Campo 2': _campo2Tabla2Controller.text,
-          'Campo 3': _campo3Tabla2Controller.text,
-          'Campo 4': _campo4Tabla2Controller.text,
-          'Campo 5': _campo5Tabla2Controller.text,
-          'Campo 6': _campo6Tabla2Controller.text,
-        };
-        _datosTabla2.add(datosGuardados);
-        // Limpiar los campos de Tabla 2
-        _campo1Tabla2Controller.clear();
-        _campo2Tabla2Controller.clear();
-        _campo3Tabla2Controller.clear();
-        _campo4Tabla2Controller.clear();
-        _campo5Tabla2Controller.clear();
-        _campo6Tabla2Controller.clear();
-      }
+  List<String> extrasPulgada = [
+    'RD',
+  ];
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Registro guardado')));
+  List<Map<String, String>> addedTendido = [];
+  List<Map<String, String>> addedExcavacionManual = [];
+  List<Map<String, String>> addedMecanica = [];
+  List<Map<String, String>> addedMaquinaria = [];
+  List<Map<String, String>> addedHerramienta = [];
 
-      // Actualizar el estado para mostrar las tablas
-      setState(() {});
+  String? _textFirmaUsuario;
+  File? _image;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+        // print('Imagen seleccionada: ${_image!.path}');
+      });
+    } else {
+      // print('No se seleccionó ninguna imagen');
     }
   }
 
-  void _mostrarDatos() {
-    // Imprimir todos los datos de todas las tablas
-    print('Datos de Tabla 1: $_datosTabla1');
-    print('Datos de Tabla 2: $_datosTabla2');
+  void agregarDatos() {
+    if (selectedMedida != null &&
+        selectedMedidaOption != null &&
+        cantidadMedida != null) {
+      setState(() {
+        addedTendido.add({
+          'tramo': _tramoController.text,
+          'acometidas': _acometidaController.text,
+          'medida': selectedMedida!,
+          'tipo': selectedMedidaOption!,
+          'cantidad_tendido': cantidadMedida.toString(),
+          'cinta': _cintaController.text,
+        });
+      });
+    }
+  }
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Datos impresos en consola')));
+  void agregarDatos1() {
+    if (selectedMedidaTwo != null && selectedMedidaOptionTwo != null) {
+      setState(() {
+        addedExcavacionManual.add({
+          'tramo': _tramoController.text,
+          'medida': selectedMedidaTwo!,
+          'tipo': selectedMedidaOptionTwo!,
+        });
+      });
+    }
+  }
+
+  void agregarDatos2() {
+    if (selectedMedidaThree != null && selectedMedidaOptionThree != null) {
+      setState(() {
+        addedMecanica.add({
+          'equipo': _equipoController.text,
+          'tramo': _tramoController.text,
+          'medida': selectedMedidaThree!,
+          'tipo': selectedMedidaOptionThree!,
+        });
+      });
+    }
+  }
+
+  void agregarDatos3() {
+    if (selectedMedidaFour != null) {
+      setState(() {
+        addedMaquinaria.add({
+          'propietario': _propietarioController.text,
+          'tramo': _tramoController.text,
+          'medida': selectedMedidaFour!,
+          'roca': _rocaController.text,
+          'observacion': _observacionController.text,
+        });
+        // _propietarioController.clear();
+        // _tramoController.clear();
+        // selectedMedidaTwo = null;
+        // _rocaController.clear();
+        // _observacionController.clear();
+      });
+    }
+  }
+
+  void agregarDatos4() {
+    setState(() {
+      addedHerramienta.add({
+        'equipo': _equipoController.text,
+        'tiempo_uso': _tiempoUsoController.text,
+        'combustible': _combustibleController.text,
+        'estado': _estadoController.text,
+        'cambio_aceite': _cambioAceiteController.text,
+        'observacion': _observacionController.text,
+      });
+    });
   }
 
   @override
@@ -105,7 +163,7 @@ class _InformeDiarioObraState extends State<InformeDiarioObra> {
           backgroundColor: Colors.red,
           foregroundColor: Colors.white,
           title: const Text(
-            'Sistema de gestión integrado',
+            'Informe Diario de Obra',
           ),
         ),
         body: SingleChildScrollView(
@@ -225,7 +283,7 @@ class _InformeDiarioObraState extends State<InformeDiarioObra> {
                         const SizedBox(
                           height: 40,
                         ),
-                        TextInputForm(
+                        const TextInputForm(
                           hintText: 'Escriba una vereda',
                           labelText: 'Vereda',
                           // onSaved: (value) {
@@ -235,7 +293,7 @@ class _InformeDiarioObraState extends State<InformeDiarioObra> {
                         const SizedBox(
                           height: 40,
                         ),
-                        TextInputForm(
+                        const TextInputForm(
                           hintText: 'Escriba el ingenierio residente',
                           labelText: 'Ingenierio',
                           // onSaved: (value) {
@@ -245,7 +303,7 @@ class _InformeDiarioObraState extends State<InformeDiarioObra> {
                         const SizedBox(
                           height: 40,
                         ),
-                        TextInputForm(
+                        const TextInputForm(
                           hintText: 'Escriba la estacion',
                           labelText: 'Estacion Almacenamiento',
                           // onSaved: (value) {
@@ -255,7 +313,7 @@ class _InformeDiarioObraState extends State<InformeDiarioObra> {
                         const SizedBox(
                           height: 40,
                         ),
-                        TextInputForm(
+                        const TextInputForm(
                           hintText: 'Escriba una jornada',
                           labelText: 'Jornada',
                           // onSaved: (value) {
@@ -269,172 +327,683 @@ class _InformeDiarioObraState extends State<InformeDiarioObra> {
                         const SizedBox(
                           height: 20,
                         ),
-                        // Campos de la Tabla 1
-                        Text('Tendido TUberia De Polietileno (ml)',
-                            style: TextStyle(fontSize: 20)),
-                        SizedBox(
+                        const Text('Tendido Tuberia De Polietileno (ml)',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 26)),
+                        const SizedBox(
                           height: 20,
                         ),
                         TextInputForm(
-                          controller: _campo1Tabla1Controller,
+                          controller: _tramoController,
                           hintText: 'Escriba el tramo',
                           labelText: 'Tramo',
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         TextInputForm(
-                          controller: _campo1Tabla2Controller,
+                          controller: _acometidaController,
                           hintText: 'Escriba la acometidas',
                           labelText: 'Acometidas',
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
-                        TextInputForm(
-                          controller: _campo3Tabla1Controller,
-                          hintText: 'Tipo A ó Tipo RD',
-                          labelText: '1/2"',
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextInputForm(
-                          controller: _campo4Tabla1Controller,
-                          hintText: 'Tipo RD',
-                          labelText: '3/4"',
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextInputForm(
-                          controller: _campo5Tabla1Controller,
-                          hintText: 'Tipo RD',
-                          labelText: '1"',
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextInputForm(
-                          controller: _campo6Tabla1Controller,
-                          hintText: 'Tipo RD',
-                          labelText: '2"',
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextInputForm(
-                          controller: _campo7Tabla1Controller,
-                          hintText: 'Tipo RD',
-                          labelText: '1"',
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextInputForm(
-                          controller: _campo8Tabla1Controller,
-                          hintText: 'Total Dia',
-                          labelText: 'Dia en Total',
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextInputForm(
-                          controller: _campo9Tabla1Controller,
-                          hintText: 'Acumulado',
-                          labelText: 'Acumulado',
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        ElevatedButton(
-                          onPressed: () => _guardarDatos(1),
-                          child: Text('Guardar Tabla 1'),
-                        ),
-                        SizedBox(height: 32),
+                        Column(
+                          children: [
+                            const Text(
+                              "Selección de medidas",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            DropdownButton<String>(
+                              hint: const Text("Seleccione una medida"),
+                              value: selectedMedida,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedMedida = newValue;
+                                  if (newValue != '1/2"') {
+                                    selectedMedidaOption = null;
+                                  }
+                                });
+                              },
+                              items: medidaPulgada
+                                  .map<DropdownMenuItem<String>>(
+                                      (String medida) {
+                                return DropdownMenuItem<String>(
+                                  value: medida,
+                                  child: Text(medida),
+                                );
+                              }).toList(),
+                            ),
+                            if (selectedMedida == '1/2"')
+                              DropdownButton<String>(
+                                hint:
+                                    const Text("Seleccione una opción de 1/2"),
+                                value: selectedMedidaOption,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedMedidaOption = newValue;
+                                  });
+                                },
+                                items: mediaPulgada
+                                    .map<DropdownMenuItem<String>>(
+                                        (String option) {
+                                  return DropdownMenuItem<String>(
+                                    value: option,
+                                    child: Text(option),
+                                  );
+                                }).toList(),
+                              ),
+                            if (selectedMedida != '1/2"')
+                              DropdownButton<String>(
+                                hint: const Text("Seleccione una opción"),
+                                value: selectedMedidaOption,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedMedidaOption = newValue;
+                                  });
+                                },
+                                items: extrasPulgada
+                                    .map<DropdownMenuItem<String>>(
+                                        (String option) {
+                                  return DropdownMenuItem<String>(
+                                    value: option,
+                                    child: Text(option),
+                                  );
+                                }).toList(),
+                              ),
+                            if (selectedMedida != null &&
+                                selectedMedidaOption != null)
+                              TextInputForm(
+                                controller: _cantidadTendidoController,
+                                hintText: 'Escriba la cantidad',
+                                labelText: 'Cantidad',
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  cantidadMedida = int.tryParse(value!);
+                                },
+                              ),
+                            // TextField(
+                            //   controller: ,
 
-                        // Tabla para mostrar los datos guardados
-                        DataTable(
-                          columns: const [
-                            DataColumn(label: Text('1')),
-                            DataColumn(label: Text('2')),
-                            DataColumn(label: Text('3')),
-                            DataColumn(label: Text('4')),
-                            DataColumn(label: Text('5')),
-                            DataColumn(label: Text('6')),
-                            DataColumn(label: Text('7')),
-                            DataColumn(label: Text('8')),
-                            DataColumn(label: Text('9')),
+                            //   decoration: const InputDecoration(
+                            //       labelText: 'Cantidad'),
+                            //   onChanged: (value) {
+                            //     cantidadMedida =
+                            //         int.tryParse(value); // Capturar cantidad
+                            //   },
+                            // ),
+                            const SizedBox(height: 20),
+                            TextInputForm(
+                              controller: _cintaController,
+                              hintText: 'Escriba la cinta',
+                              labelText: 'Cinta',
+                            ),
+                            ElevatedButton(
+                              onPressed: agregarDatos,
+                              child: const Text("Agregar"),
+                            ),
+                            const SizedBox(height: 20),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                columns: const [
+                                  DataColumn(label: Text('Tramo')),
+                                  DataColumn(label: Text('Acometidas')),
+                                  DataColumn(label: Text('Medida')),
+                                  DataColumn(label: Text('Tipo')),
+                                  DataColumn(label: Text('Cantidad')),
+                                  DataColumn(label: Text('Cinta')),
+                                ],
+                                rows: addedTendido.map((data) {
+                                  return DataRow(cells: [
+                                    DataCell(Text(data['tramo']!)),
+                                    DataCell(Text(data['acometidas']!)),
+                                    DataCell(Text(data['medida']!)),
+                                    DataCell(Text(data['tipo']!)),
+                                    DataCell(Text(data['cantidad_tendido']!)),
+                                    DataCell(Text(data['cinta']!)),
+                                  ]);
+                                }).toList(),
+                              ),
+                            ),
                           ],
-                          rows: _datosTabla1.map((datos) {
-                            return DataRow(cells: [
-                              DataCell(Text(datos['1'] ?? '')),
-                              DataCell(Text(datos['2'] ?? '')),
-                              DataCell(Text(datos['3'] ?? '')),
-                              DataCell(Text(datos['4'] ?? '')),
-                              DataCell(Text(datos['5'] ?? '')),
-                              DataCell(Text(datos['6'] ?? '')),
-                              DataCell(Text(datos['7'] ?? '')),
-                              DataCell(Text(datos['8'] ?? '')),
-                              DataCell(Text(datos['9'] ?? '')),
-                            ]);
-                          }).toList(),
                         ),
-                        SizedBox(height: 32),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Divider(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text('Excavacion (ml)',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 26)),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextInputForm(
+                          controller: _tramoController,
+                          hintText: 'Escriba el tramo',
+                          labelText: 'Tramo',
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Column(
+                          children: [
+                            const Text(
+                              "Selección de medidas",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            DropdownButton<String>(
+                              hint: const Text("Seleccione una medida"),
+                              value: selectedMedidaTwo,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedMedidaTwo = newValue;
+                                  if (newValue != '1/2"') {
+                                    selectedMedidaOptionTwo = null;
+                                  }
+                                });
+                              },
+                              items: medidaPulgada
+                                  .map<DropdownMenuItem<String>>(
+                                      (String medida) {
+                                return DropdownMenuItem<String>(
+                                  value: medida,
+                                  child: Text(medida),
+                                );
+                              }).toList(),
+                            ),
+                            if (selectedMedidaTwo == '1/2"')
+                              DropdownButton<String>(
+                                hint:
+                                    const Text("Seleccione una opción de 1/2"),
+                                value: selectedMedidaOptionTwo,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedMedidaOptionTwo = newValue;
+                                  });
+                                },
+                                items: mediaPulgada
+                                    .map<DropdownMenuItem<String>>(
+                                        (String option) {
+                                  return DropdownMenuItem<String>(
+                                    value: option,
+                                    child: Text(option),
+                                  );
+                                }).toList(),
+                              ),
+                            if (selectedMedidaTwo != '1/2"')
+                              DropdownButton<String>(
+                                hint: const Text("Seleccione una opción"),
+                                value: selectedMedidaOptionTwo,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedMedidaOptionTwo = newValue;
+                                  });
+                                },
+                                items: extrasPulgada
+                                    .map<DropdownMenuItem<String>>(
+                                        (String option) {
+                                  return DropdownMenuItem<String>(
+                                    value: option,
+                                    child: Text(option),
+                                  );
+                                }).toList(),
+                              ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: agregarDatos1,
+                              child: const Text("Agregar"),
+                            ),
+                            const SizedBox(height: 20),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                columns: const [
+                                  DataColumn(label: Text('Tramo')),
+                                  DataColumn(label: Text('Medida')),
+                                  DataColumn(label: Text('Tipo')),
+                                ],
+                                rows: addedExcavacionManual.map((data) {
+                                  return DataRow(cells: [
+                                    DataCell(Text(data['tramo']!)),
+                                    DataCell(Text(data['medida']!)),
+                                    DataCell(Text(data['tipo']!)),
+                                  ]);
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Divider(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text('Mecanica Taladros (ml)',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 26)),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextInputForm(
+                          controller: _equipoController,
+                          hintText: 'Escriba el equipo',
+                          labelText: 'Equipo',
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextInputForm(
+                          controller: _tramoController,
+                          hintText: 'Escriba el tramo',
+                          labelText: 'Tramo',
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Column(
+                          children: [
+                            const Text(
+                              "Selección de medidas",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            DropdownButton<String>(
+                              hint: const Text("Seleccione una medida"),
+                              value: selectedMedidaThree,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedMedidaThree = newValue;
+                                  if (newValue != '1/2"') {
+                                    selectedMedidaOptionThree = null;
+                                  }
+                                });
+                              },
+                              items: medidaextraPulgada
+                                  .map<DropdownMenuItem<String>>(
+                                      (String medida) {
+                                return DropdownMenuItem<String>(
+                                  value: medida,
+                                  child: Text(medida),
+                                );
+                              }).toList(),
+                            ),
+                            if (selectedMedidaThree == '1/2"')
+                              DropdownButton<String>(
+                                hint:
+                                    const Text("Seleccione una opción de 1/2"),
+                                value: selectedMedidaOptionThree,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedMedidaOptionThree = newValue;
+                                  });
+                                },
+                                items: mediaPulgada
+                                    .map<DropdownMenuItem<String>>(
+                                        (String option) {
+                                  return DropdownMenuItem<String>(
+                                    value: option,
+                                    child: Text(option),
+                                  );
+                                }).toList(),
+                              ),
+                            if (selectedMedidaThree != '1/2"')
+                              DropdownButton<String>(
+                                hint: const Text("Seleccione una opción"),
+                                value: selectedMedidaOptionThree,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedMedidaOptionThree = newValue;
+                                  });
+                                },
+                                items: extrasPulgada
+                                    .map<DropdownMenuItem<String>>(
+                                        (String option) {
+                                  return DropdownMenuItem<String>(
+                                    value: option,
+                                    child: Text(option),
+                                  );
+                                }).toList(),
+                              ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: agregarDatos2,
+                              child: const Text("Agregar"),
+                            ),
+                            const SizedBox(height: 20),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                columns: const [
+                                  DataColumn(label: Text('Equipo')),
+                                  DataColumn(label: Text('Tramo')),
+                                  DataColumn(label: Text('Medida')),
+                                  DataColumn(label: Text('Tipo')),
+                                ],
+                                rows: addedMecanica.map((data) {
+                                  return DataRow(cells: [
+                                    DataCell(Text(data['equipo']!)),
+                                    DataCell(Text(data['tramo']!)),
+                                    DataCell(Text(data['medida']!)),
+                                    DataCell(Text(data['tipo']!)),
+                                  ]);
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Divider(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text('Excavacion con Maquinaria (ml)',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 26)),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextInputForm(
+                          controller: _propietarioController,
+                          hintText: 'Escriba el propietario',
+                          labelText: 'Propietario',
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextInputForm(
+                          controller: _tramoController,
+                          hintText: 'Escriba el tramo',
+                          labelText: 'Tramo',
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Column(
+                          children: [
+                            const Text(
+                              "Selección de medidas",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            DropdownButton<String>(
+                              hint: const Text("Seleccione una medida"),
+                              value: selectedMedidaFour,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedMedidaFour = newValue;
+                                });
+                              },
+                              items: mediaPulgada.map<DropdownMenuItem<String>>(
+                                  (String medida) {
+                                return DropdownMenuItem<String>(
+                                  value: medida,
+                                  child: Text(medida),
+                                );
+                              }).toList(),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextInputForm(
+                              controller: _rocaController,
+                              hintText: 'Escriba la roca',
+                              labelText: 'Roca',
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextInputForm(
+                              controller: _observacionController,
+                              hintText: 'Escriba una observacion',
+                              labelText: 'Observaciones',
+                            ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: agregarDatos3,
+                              child: const Text("Agregar"),
+                            ),
+                            const SizedBox(height: 20),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                columns: const [
+                                  DataColumn(label: Text('Propietario')),
+                                  DataColumn(label: Text('Tramo')),
+                                  DataColumn(label: Text('Medida')),
+                                  DataColumn(label: Text('Roca')),
+                                  DataColumn(label: Text('Observaciones')),
+                                ],
+                                rows: addedMaquinaria.map((data) {
+                                  return DataRow(cells: [
+                                    DataCell(Text(data['propietario']!)),
+                                    DataCell(Text(data['tramo']!)),
+                                    DataCell(Text(data['medida']!)),
+                                    DataCell(Text(data['roca']!)),
+                                    DataCell(Text(data['observacion']!)),
+                                  ]);
+                                }).toList(),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Divider(),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Text('Herramientas y Equipos (horas)',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 26)),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextInputForm(
+                              controller: _equipoController,
+                              hintText: 'Escriba la equipo',
+                              labelText: 'Equipo',
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextInputForm(
+                              controller: _tiempoUsoController,
+                              hintText: 'Escriba tiempo de uso',
+                              labelText: 'Tiempo Uso',
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextInputForm(
+                              controller: _combustibleController,
+                              hintText: 'Escria el combustible',
+                              labelText: 'Combustible',
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextInputForm(
+                              controller: _estadoController,
+                              hintText: 'Escriba el estado',
+                              labelText: 'Estado',
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextInputForm(
+                              controller: _cambioAceiteController,
+                              hintText: 'Escriba el cambio de aceite',
+                              labelText: 'Cambio Aceite',
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextInputForm(
+                              controller: _observacionController,
+                              hintText: 'Escriba una observacion',
+                              labelText: 'Observaciones',
+                            ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: agregarDatos4,
+                              child: const Text("Agregar"),
+                            ),
+                            const SizedBox(height: 20),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                columns: const [
+                                  DataColumn(label: Text('Equipo')),
+                                  DataColumn(label: Text('Tiempo Uso')),
+                                  DataColumn(label: Text('Combustible')),
+                                  DataColumn(label: Text('Estado')),
+                                  DataColumn(label: Text('Cambio Aceite')),
+                                  DataColumn(label: Text('Observaciones')),
+                                ],
+                                rows: addedHerramienta.map((data) {
+                                  return DataRow(cells: [
+                                    DataCell(Text(data['equipo']!)),
+                                    DataCell(Text(data['tiempo_uso']!)),
+                                    DataCell(Text(data['combustible']!)),
+                                    DataCell(Text(data['estado']!)),
+                                    DataCell(Text(data['cambio_aceite']!)),
+                                    DataCell(Text(data['observacion']!)),
+                                  ]);
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Divider(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text(
+                          "Observaciones",
+                          style: TextStyle(fontSize: 30),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const TextInputForm(
+                            maxLines: null,
+                            hintText: "Observaciones acerca del recibo de obra",
+                            labelText: "Observacion"),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Divider(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text(
+                          "Firmas Digitales",
+                          style: TextStyle(fontSize: 30),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextInputForm(
+                          hintText: 'Firma del Usuario',
+                          labelText: 'Usuario',
+                          prefixIcon: const Icon(
+                              Icons.drive_file_rename_outline_outlined),
+                          onSaved: (value) {
+                            _textFirmaUsuario = value;
+                            // _image = null;
+                          },
+                          isImageSelected: _image != null,
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: _pickImage,
+                                child: const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text('Cargar Imagen'),
+                                    Icon(Icons.image_search_rounded)
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            if (_image != null)
+                              Image.file(
+                                _image!,
+                                width: 100,
+                                height: 100,
+                              ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Divider(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(30.0),
+                          child: SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
 
-                        // Campos de la Tabla 2
-                        Text('Tabla 2', style: TextStyle(fontSize: 20)),
-                        TextFormField(
-                          controller: _campo1Tabla2Controller,
-                          decoration: InputDecoration(labelText: 'Campo 1'),
-                          validator: (value) => value!.isEmpty
-                              ? 'Por favor, ingrese un dato'
-                              : null,
-                        ),
-                        TextFormField(
-                          controller: _campo2Tabla2Controller,
-                          decoration: InputDecoration(labelText: 'Campo 2'),
-                          validator: (value) => value!.isEmpty
-                              ? 'Por favor, ingrese un dato'
-                              : null,
-                        ),
-                        TextFormField(
-                          controller: _campo3Tabla2Controller,
-                          decoration: InputDecoration(labelText: 'Campo 3'),
-                          validator: (value) => value!.isEmpty
-                              ? 'Por favor, ingrese un dato'
-                              : null,
-                        ),
-                        TextFormField(
-                          controller: _campo4Tabla2Controller,
-                          decoration: InputDecoration(labelText: 'Campo 4'),
-                          validator: (value) => value!.isEmpty
-                              ? 'Por favor, ingrese un dato'
-                              : null,
-                        ),
-                        TextFormField(
-                          controller: _campo5Tabla2Controller,
-                          decoration: InputDecoration(labelText: 'Campo 5'),
-                          validator: (value) => value!.isEmpty
-                              ? 'Por favor, ingrese un dato'
-                              : null,
-                        ),
-                        TextFormField(
-                          controller: _campo6Tabla2Controller,
-                          decoration: InputDecoration(labelText: 'Campo 6'),
-                          validator: (value) => value!.isEmpty
-                              ? 'Por favor, ingrese un dato'
-                              : null,
-                        ),
-                        ElevatedButton(
-                          onPressed: () => _guardarDatos(2),
-                          child: Text('Guardar Tabla 2'),
-                        ),
-                        SizedBox(height: 32),
-
-                        ElevatedButton(
-                          onPressed: _mostrarDatos,
-                          child: Text('Mostrar Todos los Datos'),
+                                    // await uploadFileToDrive(
+                                    //     'form_data.pdf',
+                                    //     {
+                                    //       'nombreTecnico': _nombreTecnico,
+                                    //       'nombreUsuario': _nombreUsuario,
+                                    //       'codigoUsuario': _codigoUsuario,
+                                    //       'cedula': _cedula,
+                                    //       'fechaConstruccion':
+                                    //           _fechaConstruccion,
+                                    //       'fechaServicio': _fechaServicio,
+                                    //       'materiales': addedMaterials,
+                                    //       'firmaUsuario':
+                                    //           _textFirmaUsuario ?? '',
+                                    //       'firmaInstalador':
+                                    //           _textFirmaInstalador ?? '',
+                                    //       'firmaSuperior':
+                                    //           _textFirmaSuperior ?? '',
+                                    //     },
+                                    //     _image);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30, vertical: 15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(19),
+                                  ),
+                                  elevation: 5,
+                                ),
+                                child: const Text(
+                                  "Enviar",
+                                  style: TextStyle(fontSize: 25),
+                                ),
+                              )),
                         ),
                       ],
                     ),
@@ -449,8 +1018,10 @@ class TextInputForm extends StatelessWidget {
     required this.hintText,
     required this.labelText,
     this.suffixIcon,
+    this.prefixIcon,
     this.onPressed,
     this.onSaved,
+    this.onChanged,
     this.controller,
     this.isImageSelected = false,
     this.keyboardType,
@@ -459,8 +1030,10 @@ class TextInputForm extends StatelessWidget {
 
   final String labelText, hintText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final VoidCallback? onPressed;
   final void Function(String?)? onSaved;
+  final void Function(String?)? onChanged;
   final TextEditingController? controller;
   final bool isImageSelected;
   final TextInputType? keyboardType;
@@ -478,10 +1051,12 @@ class TextInputForm extends StatelessWidget {
       },
       onTap: onPressed,
       onSaved: onSaved,
+      onChanged: onChanged,
       keyboardType: keyboardType,
       maxLines: maxLines,
       decoration: InputDecoration(
           // suffixIcon: Icon(Icons.image_search),
+          prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
           border: InputBorder.none,
           enabledBorder: OutlineInputBorder(
