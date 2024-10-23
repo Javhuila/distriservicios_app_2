@@ -7,9 +7,14 @@ import 'package:flutter/material.dart';
 import 'Recibo obra-material/reciboobramaterial.dart';
 import 'Recibo obra-soldador/reciboobrasoldador.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,10 +61,11 @@ class Home extends StatelessWidget {
                           );
                         },
                         child: Container(
+                          margin: EdgeInsets.zero,
                           width: 90,
                           height: 150,
-                          child: Center(
-                            child: const Text(
+                          child: const Center(
+                            child: Text(
                               "Recibo de obra y de Material",
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.clip,

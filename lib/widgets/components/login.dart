@@ -4,7 +4,7 @@ import 'package:distriservicios_app_2/widgets/components/home.dart';
 import 'package:distriservicios_app_2/widgets/components/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -26,15 +26,18 @@ class _LogInState extends State<LogIn> {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
-      await prefs.setString('userCorreo', email);
-      print('Estado de inicio de sesión guardado: true');
-      print('Usuario ha iniciado sesión: $email');
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // await prefs.setBool('isLoggedIn', true);
+      // await prefs.setString('userCorreo', email);
+      // print('Estado de inicio de sesión guardado: true');
+      // print('Usuario ha iniciado sesión: $email');
 
       if (!mounted) return;
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Home()));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const Home()),
+        (Route<dynamic> route) => false,
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -1,7 +1,7 @@
 import 'package:distriservicios_app_2/widgets/components/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -21,7 +21,7 @@ class Profile extends StatelessWidget {
               "Cerrar Sesión",
               style: TextStyle(
                 fontSize: 36,
-                backgroundColor: Colors.purple[200],
+                backgroundColor: Colors.red[200],
                 color: Colors.white,
               ),
             )),
@@ -32,9 +32,9 @@ class Profile extends StatelessWidget {
   Future<void> logoutUser(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', false);
-    await prefs.remove('userCorreo');
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.setBool('isLoggedIn', false);
+    // await prefs.remove('userCorreo');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.pushReplacement(
