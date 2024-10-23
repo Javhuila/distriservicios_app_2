@@ -104,21 +104,6 @@ class _ReporteDiarioPersonalState extends State<ReporteDiarioPersonal> {
               height: 20,
             ),
             Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.all(30.0),
-              child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple, // Color de fondo
-                      foregroundColor: Colors.white, // Color del texto
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15), // Espaciado interno
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(12), // Bordes redondeados
-=======
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 40),
               child: Form(
                   key: _formKey,
@@ -126,7 +111,6 @@ class _ReporteDiarioPersonalState extends State<ReporteDiarioPersonal> {
                     children: [
                       SizedBox(
                         height: 20,
->>>>>>> 751c5c71edb03ac6923ef2d488f406b612d29ccf
                       ),
                       TextInputForm(
                         hintText: 'Nombre del proyecto',
