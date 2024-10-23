@@ -275,8 +275,8 @@ class ReporteDiarioPersonal extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.purple, // Color de fondo
-                      onPrimary: Colors.white, // Color del texto
+                      backgroundColor: Colors.purple, // Color de fondo
+                      foregroundColor: Colors.white, // Color del texto
                       padding: EdgeInsets.symmetric(
                           horizontal: 30, vertical: 15), // Espaciado interno
                       shape: RoundedRectangleBorder(
