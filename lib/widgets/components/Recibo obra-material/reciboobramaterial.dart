@@ -339,6 +339,8 @@ class _ReciboObraMaterialState extends State<ReciboObraMaterial> {
                             height: 10,
                           ),
                           DropdownButton<Materiales>(
+                            menuMaxHeight: 500,
+                            itemHeight: 80,
                             hint: const Text("Seleccione un material"),
                             value: seleccionarMaterial,
                             onChanged: (Materiales? newMaterial) {
@@ -351,7 +353,13 @@ class _ReciboObraMaterialState extends State<ReciboObraMaterial> {
                                     (Materiales materiales) {
                               return DropdownMenuItem<Materiales>(
                                 value: materiales,
-                                child: Text(materiales.nombre),
+                                child: Container(
+                                  width: 350,
+                                  child: Text(
+                                    materiales.nombre,
+                                    maxLines: 3,
+                                  ),
+                                ),
                               );
                             }).toList(),
                           ),
@@ -435,6 +443,8 @@ class _ReciboObraMaterialState extends State<ReciboObraMaterial> {
                             height: 10,
                           ),
                           DropdownButton<Mediciones>(
+                            menuMaxHeight: 500,
+                            itemHeight: 80,
                             hint: const Text("Seleccione un material"),
                             value: seleccionarMediciones,
                             onChanged: (Mediciones? newMedicion) {
@@ -447,7 +457,8 @@ class _ReciboObraMaterialState extends State<ReciboObraMaterial> {
                                     (Mediciones mediciones) {
                               return DropdownMenuItem<Mediciones>(
                                 value: mediciones,
-                                child: Text(mediciones.nombre),
+                                child: Container(
+                                    width: 350, child: Text(mediciones.nombre)),
                               );
                             }).toList(),
                           ),
